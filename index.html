@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)} body{margin:0} img{max-width:100%} [hidden]{display:none!important}</style>
+<title>Tell us about the water</title>
+<meta name="description" content="Club Copains survey: help us chart our new course.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=Archivo:ital,wdth,wght@0,100..125,400..900;1,100..125,400..900&display=swap">
+<style>
+/* Layout: één smalle kolom die drijft op het Transported-verloop (elektrisch blauw naar paars), witte serif-tekst, rood als enige accent */
+:root {
+  --blue: #2a1fe0; --blue-deep: #1d14c4; --red: #ff0a1e; --white: #fbf8f4;
+  --soft: rgba(251, 248, 244, .72); --panel: rgba(255, 255, 255, .07); --line: rgba(251, 248, 244, .22); --hover: rgba(255, 10, 30, .18);
+  --display: "Gloock", "Bodoni Moda", Georgia, serif;
+  --body: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box }
+html { background: var(--blue) }
+body { min-height: 100vh; color: var(--white); font-family: var(--body); font-size: 16px; font-stretch: 108%; line-height: 1.5;
+  background: radial-gradient(60% 45% at 100% 0%, rgba(255,10,30,.55), transparent 70%),
+              radial-gradient(50% 40% at 0% 100%, rgba(255,10,30,.45), transparent 70%),
+              linear-gradient(180deg, var(--blue) 0%, var(--blue-deep) 100%) fixed;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 56px }
+.wrap { max-width: 640px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px }
+.top { display: flex; justify-content: flex-start; align-items: baseline; gap: 12px; flex-wrap: wrap }
+.mark { font-family: var(--display); color: var(--red); letter-spacing: .02em; font-size: 18px; border-left: 1px solid var(--red); padding-left: 10px }
+.badge { font-family: var(--display); font-size: 11px; letter-spacing: .08em; opacity: .75; text-transform: uppercase; color: var(--soft) }
+.progress { height: 8px; background: rgba(255,255,255,.18); border-radius: 99px; overflow: hidden }
+.progress > i { display: block; height: 100%; border-radius: 99px; background: var(--red); transition: width .3s }
+.step { font-family: var(--display); font-size: 14px; color: var(--soft); font-variant-numeric: tabular-nums; letter-spacing: .06em; text-transform: uppercase }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 22px }
+.head { background: transparent; border: 0; padding: 18px 0 8px }
+.head h1 { border-bottom: 3px solid var(--red); padding-bottom: 12px }
+.q.card { border-left: 3px solid var(--red) }
+h1, h2 { font-family: var(--display); font-weight: 400; text-transform: uppercase; text-wrap: balance; margin: 0 0 12px; line-height: 1.05; letter-spacing: .01em }
+h1 { font-size: clamp(34px, 8vw, 52px) } h2 { font-size: clamp(26px, 6vw, 36px) }
+.intro { color: var(--white); white-space: pre-line; margin: 0; max-width: 60ch }
+.q-title { font-weight: 700; font-stretch: 112%; font-size: 17px; margin: 0 0 4px }
+.req { color: var(--red) }
+.help { font-size: 15px; color: var(--soft); font-style: italic; margin: 0 0 12px }
+.opts { display: flex; flex-direction: column; gap: 4px }
+.opt { display: flex; gap: 12px; align-items: flex-start; padding: 8px 10px; border-radius: 3px; cursor: pointer }
+.opt:hover { background: var(--hover) }
+.opt input { margin-top: 5px; accent-color: var(--red); width: 18px; height: 18px; flex: none }
+.scale { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; text-align: center }
+.scale label { display: flex; flex-direction: column; gap: 4px; align-items: center; padding: 8px 0; border-radius: 3px; cursor: pointer; font-variant-numeric: tabular-nums }
+.scale label:hover { background: var(--hover) }
+.scale input { accent-color: var(--red); width: 18px; height: 18px }
+.ends { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; color: var(--soft); font-style: italic; margin-top: 6px }
+textarea, input[type=email] { width: 100%; font: inherit; color: var(--white); background: rgba(255,255,255,.08); border: 1px solid var(--line); border-radius: 3px; padding: 10px }
+textarea::placeholder, input::placeholder { color: var(--soft) }
+textarea { min-height: 90px; resize: vertical }
+.err { color: var(--white); background: var(--red); padding: 6px 10px; font-size: 14px; margin-top: 10px }
+.q.bad { border-color: var(--red) }
+.nav { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap }
+button { font-family: "Archivo", "Helvetica Neue", Arial, sans-serif; font-weight: 800; font-stretch: 120%; font-size: 14px; letter-spacing: .05em; text-transform: uppercase; border-radius: 999px; padding: 12px 26px; cursor: pointer; border: 1px solid transparent }
+.primary { background: var(--red); color: var(--white) }
+.primary:hover { filter: brightness(1.1) }
+.ghost { background: transparent; color: var(--white); border-color: var(--line) }
+button:focus-visible, .opt:focus-within, .scale label:focus-within { outline: 2px solid var(--white); outline-offset: 2px }
+.route { font-size: 14px; color: var(--soft); border-left: 1px solid var(--red); padding: 2px 12px }
+.route b { color: var(--white); font-weight: 500 }
+.sum { display: flex; flex-direction: column; gap: 10px; margin-top: 12px }
+.sum div { border-top: 1px solid var(--line); padding-top: 8px }
+.sum span { display: block; font-size: 13px; color: var(--soft); font-style: italic }
+.welcome { --wide: "Archivo", "Helvetica Neue", Arial, sans-serif; font-family: var(--wide) }
+.welcome .blocks { display: flex; flex-direction: column; gap: 26px; margin-top: 6px }
+.welcome .lead { font-size: 20px; font-weight: 800; font-stretch: 118%; line-height: 1.3; margin: 0; text-wrap: balance }
+.welcome .label { font-size: 14px; font-weight: 800; font-stretch: 125%; letter-spacing: .06em; color: var(--white); border-left: 1px solid var(--red); padding-left: 10px; margin: 0 0 12px }
+.welcome ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px }
+.welcome li { position: relative; padding-left: 24px; font-size: 16px; font-weight: 600; font-stretch: 110%; line-height: 1.45 }
+.welcome li::before { content: ""; position: absolute; left: 0; top: .5em; width: 10px; height: 10px; border-radius: 50%; background: var(--red) }
+.opt.disabled { opacity: .35; cursor: not-allowed }
+.teller { font-size: 13px; color: var(--soft); margin: 10px 0 0 }
+.teller.vol { display: inline-block; color: var(--white); background: var(--red); font-weight: 700; padding: 5px 12px; border-radius: 999px }
+.opt.opt-go { background: var(--white); color: var(--blue); font-weight: 800; letter-spacing: .03em; border-radius: 999px; padding: 12px 18px; margin-bottom: 8px; box-shadow: 0 0 0 3px var(--red) }
+.opt.opt-go:hover { background: var(--white); filter: brightness(.95) }
+.opt.opt-go input { accent-color: var(--red) }
+.otherwrap { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0 }
+.opt input.othertxt { width: 100%; height: auto; margin-top: 0; flex: none; font: inherit; color: var(--white); background: rgba(255,255,255,.08); border: 1px solid var(--line); border-radius: 3px; padding: 8px 10px }
+.opt input.othertxt::placeholder { color: var(--soft) }
+@media (prefers-reduced-motion: reduce) { .progress > i { transition: none } }
+</style>
+
+<div class="wrap">
+  <div aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden"><label for="hp">Leave this empty</label><input id="hp" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+  <div class="top"><span class="mark">TRANSPORTED</span><span class="badge">Survey by Entre Copains</span></div>
+  <div class="progress"><i id="bar"></i></div>
+  <div class="step" id="step"></div>
+  <div id="page" class="wrap" style="gap:12px"></div>
+  <div class="route" id="route"></div>
+  <div class="nav" id="nav">
+    <button class="ghost" id="back" type="button">Back</button>
+    <button class="primary" id="next" type="button">Next</button>
+  </div>
+</div>
+
+<script>
+// ========== TEKSTEN (enquête in het Engels) ==========
+const TITEL = 'Tell us about the water.';
+const OMSCHRIJVING =
+  'Copains, we\'ve been reading the water. Now it\'s your turn.\n\n' +
+  'WHAT TO EXPECT\n' +
+  '• 5 minutes, fully anonymous\n' +
+  '• A few questions about you\n' +
+  '• Up to 3 things that keep you from going out\n' +
+  '• What would bring you back\n\n' +
+  'WHY IT MATTERS\n' +
+  '• You shape our next nights: prices, hours, music, venue\n' +
+  '• We share the results with other clubs and party concepts\n' +
+  '• More answers, a stronger signal\n\n' +
+  'Take your time and think about every question. Your answers decide how our nights will change.';
+const BEDANKT =
+  'Thank you, copain. Every answer is a star to navigate by, and yours really makes a difference: it shows us what truly matters to you.\n\n' +
+  'Know someone who should fill this in too? Share the survey with your friends. The more voices we hear, the better the next crossing.\n\n' +
+  'Keep your eyes on the water: we\'ll share the results on our Instagram soon.';
+
+// Sectie- en hulpteksten
+const SECTIE_A_TITEL = 'About you';
+const SECTIE_A_INTRO = 'A few short questions, so we can compare answers between groups.';
+const START_KNOP = 'Start the survey';
+const SECTIE_B_TITEL = 'What keeps you on shore?';
+const SECTIE_B_INTRO = 'Tick your top 3. After this, we\'ll ask a few short questions about each one.';
+const SECTIE_N1_TITEL = 'Your number 1';
+const SECTIE_N1_INTRO = 'These are the reasons you ticked.';
+const ZWAARST_HELP = 'Take a moment for this one. All of them matter, but if we could fix only one, which one would really get you out (more often) again?';
+const NR2_HELP = 'The other one automatically becomes your number 3. We\'ll ask a few questions about your number 1 and 2.';
+const X_HELP = 'Pick one to tell us more about it, or continue.';
+const X_NEE = '➜ NO, CONTINUE';
+const ANDER_LABEL = 'Other / your own idea:';
+const RONDE_TITEL = (k, titel) => 'Reason #' + (k + 1) + ' · ' + titel;
+const EXTRA_TITEL = titel => 'One more · ' + titel;
+const NIETS_FOUT = 'Choose either your reasons or "Nothing", not both.';
+const SECTIE_T_TITEL = 'About buying tickets';
+const SECTIE_T_INTRO = 'More and more people buy their ticket last minute. Help us understand why.';
+const SECTIE_D_TITEL = 'What brings you back on deck?';
+const SECTIE_D_INTRO = 'A few more questions for everyone.';
+const SECTIE_E_TITEL = 'Almost done';
+const MAX_HELP = n => 'Choose up to ' + n + ' answers.';
+const EMAIL_FOUT = 'Please enter a valid email address.';
+
+// ========== VASTE TITELS (niet wijzigen na lancering, de analyse gebruikt ze) ==========
+const TITEL_LEEFTIJD = 'How old are you?';
+const TITEL_GENDER = 'How do you identify?';
+const TITEL_WOON = 'Where do you live?';
+const TITEL_DAG = 'What do you do in daily life?';
+const TITEL_VROEGER = 'How often did you go out 2 to 3 years ago? (club / party / event)';
+const TITEL_NU = 'How often do you go out now?';
+const TITEL_DREMPELS = 'What holds you back most from going out (more often)?';
+const TITEL_ZWAARST = 'Which of these is your number 1: the deciding reason?';
+const TITEL_NR2 = 'Which of these two comes second?';
+const TITEL_NR3 = 'Number 3';
+const TITEL_X = 'Is there another topic that matters to you?';
+const TITEL_EXTRA = 'Other topics they also explained';
+
+const LEEFTIJD = ['Under 18', '18-21', '22-25', '26-30', '31-35', '36-45', '46 or older'];
+const FREQ = ['Every week or more', '2 to 3 times a month', 'About once a month', 'A few times a year', '(Almost) never'];
+
+const REDENEN = [
+  { key: 'prijs', label: 'The price: tickets and drinks' },
+  { key: 'uren', label: 'The hours: it starts or ends too late' },
+  { key: 'gezond', label: 'I live healthier: less drinking / more sleep or sport' },
+  { key: 'vervoer', label: 'Distance and getting there and back' },
+  { key: 'muziek', label: 'The music or line-up doesn\'t appeal to me' },
+  { key: 'concept', label: 'The concept: always the same, or just a dance floor' },
+  { key: 'venue', label: 'The venue itself: layout, seating, light and sound' },
+  { key: 'publiek', label: 'The crowd or my group of friends' },
+  { key: 'veiligheid', label: 'I don\'t always feel safe or comfortable' },
+  { key: 'tijd', label: 'My life has changed: work, kids, family or other priorities' },
+  { key: 'anders', label: 'I\'d rather do an activity: sport, cinema, game night, concert' },
+  { key: 'info', label: 'I don\'t really know what\'s on' },
+  { key: 'zin', label: 'Just less in the mood: no specific reason' }
+];
+const NIETS = 'Nothing: I still enjoy going out as much as before';
+
+// ========== HULPJES OM VRAGEN TE DEFINIËREN ==========
+function mc(title, options, help, required) { return { type: 'mc', title, options, help: help || '', required: required !== false }; }
+function cb(title, options, max, help) { return { type: 'cb', title, options, max: max || 0, help: help || (max ? MAX_HELP(max) : 'Multiple answers possible.'), required: true }; }
+// Zelfde, maar met een vrij invulveld "Other" voor eigen redenen en ideeën
+function cbx(title, options, max, help) { const q = cb(title, options, max, help); q.other = true; return q; }
+function schaal(title, laag, hoog, help) { return { type: 'scale', title, laag, hoog, help: help || '', required: true }; }
+function openVraag(title, help) { return { type: 'para', title, help: help || '', required: false }; }
+function mailVraag(title, help) { return { type: 'email', title, help: help || '', required: false }; }
+
+// ========== DEEL A: OVER JOU ==========
+const ALGEMEEN = [
+  mc(TITEL_LEEFTIJD, LEEFTIJD),
+  mc(TITEL_GENDER, ['Woman', 'Man', 'Non-binary', 'Prefer not to say']),
+  mc(TITEL_WOON, ['Antwerp city', 'Around Antwerp', 'Elsewhere in the province of Antwerp', 'Ghent', 'Brussels', 'Elsewhere in Belgium', 'Outside Belgium']),
+  mc(TITEL_DAG, ['Student', 'Working full-time', 'Working part-time', 'Self-employed', 'Looking for work', 'Something else']),
+  mc(TITEL_VROEGER, FREQ.concat(['I didn\'t go out yet back then'])),
+  mc(TITEL_NU, FREQ),
+  mc('Which night do you prefer to go out?', ['Friday', 'Saturday', 'Both equally', 'A weeknight', 'Doesn\'t matter'])
+];
+
+// ========== DEEL B: WAT HOUDT JE TEGEN ==========
+const DREMPELS = cb(TITEL_DREMPELS, REDENEN.map(r => r.label).concat([NIETS]), 3, 'Tick up to 3 reasons.');
+
+// ========== DEEL C: VERDIEPING PER REDEN ==========
+const DIEPTE = {
+  prijs: {
+    titel: 'About the price', intro: 'A closer look at what going out costs.', vragen: [
+      mc('What do you think is a fair ticket price for a regular club night? (no big headliner)', ['Free or max €5', '€6 - €10', '€11 - €15', '€16 - €20', '€21 - €25', 'More than €25, if the line-up is right']),
+      mc('Roughly how much do you spend on a night out? (ticket + drinks + transport)', ['Less than €25', '€25 - €49', '€50 - €74', '€75 - €100', 'More than €100']),
+      mc('What makes you hesitate most about the cost?', ['The ticket price', 'The drink prices', 'Transport and taxis', 'It all adds up to too much']),
+      mc('If you have drinks before the party, where do you usually have them?', ['At home, to save money', 'At home, for the vibe with friends', 'In a bar or café', 'I don\'t have drinks before']),
+      cbx('When it comes to price, what would convince you to go (more often)?', ['Cheaper presale tickets', 'Free or cheaper entry before a certain time', 'Drink tokens or a drinks package in your ticket', 'Student discount', 'Group tickets (e.g. 4 for the price of 3)', 'Cheaper water and soft drinks'])
+    ]
+  },
+  uren: {
+    titel: 'About the hours', intro: 'When do you like to party?', vragen: [
+      mc('If a club opens at 11 pm, what time do you usually arrive?', ['Around 11 pm', 'Midnight - 1 am', '1 am - 2 am', 'After 2 am']),
+      mc('Imagine the club is already full and the vibe is great from the start. What time would you ideally arrive?', ['Before 8 pm', '8 pm - 10 pm', '10 pm - midnight', 'Midnight - 1 am', 'After 1 am']),
+      mc('Ideally, what time do you want to go home?', ['Before 10 pm', '10 pm - midnight', 'Midnight - 2 am', '2 am - 4 am', 'After 4 am']),
+      mc('Would you go to early clubbing? (e.g. from 8 pm to 2 am)', ['Yes, definitely', 'Sometimes, next to classic late nights', 'No, I prefer late nights']),
+      cbx('On which day would early clubbing work for you?', ['Friday', 'Saturday', 'Sunday afternoon or evening', 'The night before a public holiday', 'A weeknight (e.g. Thursday)']),
+      cbx('What do you usually do before going to a party?', ['Drinks in a bar with friends', 'Pre-drinks at home', 'Dinner at home', 'Dinner at a restaurant', 'Sport or another activity', 'Straight to the club']),
+      mc('If a party started at 8 pm, where would you prefer to have dinner?', ['At home, before the party', 'At a restaurant first, and arrive a bit later', 'At the event itself (food trucks / snacks)', 'A dinner + party combo at the same place', 'I\'d skip dinner'])
+    ]
+  },
+  gezond: {
+    titel: 'About living healthier', intro: 'How does going out fit your lifestyle?', vragen: [
+      cbx('Which of these fit you?', ['I drink less or no alcohol', 'I often do sport the next day', 'I don\'t want to disrupt my sleep', 'I just get tired: I can\'t make it past 1 or 2 am anymore', 'A hangover isn\'t worth it anymore', 'I don\'t want to lose the whole next day']),
+      schaal('How important is alcohol to you at a party?', 'Not at all', 'Very important'),
+      cbx('Would you go out more often with ...', ['A strong range of alcohol-free drinks and mocktails', 'A party that gets busy and fun early, even if it goes on late', 'A party that ends early', 'A day party or afternoon party', 'A combination with sport or wellness (e.g. run + party)', 'Healthy food on site'])
+    ]
+  },
+  vervoer: {
+    titel: 'About distance and transport', intro: 'How do you get there, and back home?', vragen: [
+      mc('How do you usually get to a party?', ['On foot', 'Bike (own or shared)', 'E-step or shared scooter (e.g. Lime, Bolt, Dott)', 'Public transport', 'By car (driving myself)', 'Taxi or Uber', 'Someone drives me']),
+      cbx('What makes getting there or back difficult?', ['The club is too far from where we have drinks', 'No public transport at night', 'Taxis are too expensive', 'Parking is difficult or expensive', 'I don\'t feel safe on the way home', 'Nobody wants to be the designated driver']),
+      mc('How far are you willing to go from the bar to the club?', ['Max 5 min on foot', 'Max 15 min on foot', 'Max 15 min by bike or public transport', 'Distance doesn\'t matter if the party is good']),
+      cbx('What would help?', ['A shuttle bus', 'A party in the city centre', 'A discount on taxis or shared transport', 'Safe bike parking', 'A party that ends while trams or trains still run'])
+    ]
+  },
+  muziek: {
+    titel: 'About the music', intro: 'What do you want to hear?', vragen: [
+      cbx('What bothers you about the music you often hear now?', ['Too commercial', 'Too underground or too hard', 'Always the same songs', 'Not enough variety in one night', 'No names that draw me in', 'The music doesn\'t match the crowd']),
+      mc('What convinces you most to go?', ['A well-known headliner', 'A genre I love', 'The vibe and the concept', 'Where my friends are going']),
+      mc('One genre all night or a mix?', ['One genre', 'A mix', 'Different rooms, each with its own genre'])
+    ]
+  },
+  concept: {
+    titel: 'About the concept', intro: 'What makes a night worth it for you?', vragen: [
+      cbx('What do you miss at a party?', ['A theme', 'Something to do besides dancing (games / workshops / art)', 'Live acts or performances', 'Surprises during the night', 'Something to take part in, not just watch']),
+      mc('Small or big?', ['Small and intimate (up to 300)', 'Medium (300 - 1000)', 'Big (more than 1000)', 'Doesn\'t matter']),
+      mc('What do you think of phones on the dance floor?', ['I like filming and sharing', 'Rather without (e.g. a sticker on the camera)', 'I don\'t mind'])
+    ]
+  },
+  venue: {
+    titel: 'About the venue', intro: 'How a club is set up matters. Tell us what works for you.', vragen: [
+      cbx('What bothers you most in club venues?', ['Nowhere to sit or take a break', 'One big open space with no corners or levels', 'The sound is too loud or bad', 'The lighting is too dark, too bright or boring', 'Too hot or badly ventilated', 'Long queues at the bar or toilets', 'Too few or dirty toilets', 'No outdoor space or terrace', 'The cloakroom is slow or expensive']),
+      cbx('What would make a venue feel right for you?', ['A lounge or seating area', 'Different levels, corners and nooks', 'A separate quieter room to talk', 'A terrace or outdoor smoking area', 'A powerful sound system', 'Creative lighting and visuals', 'Decoration that matches the theme', 'Enough space to dance comfortably', 'Free water points'], 3),
+      schaal('How important is sound quality to you?', 'Not at all', 'Very important'),
+      schaal('How important are lighting and visuals to you?', 'Not at all', 'Very important'),
+      mc('Where do you spend most of your night?', ['On the dance floor', 'At the bar', 'In a lounge or seating area', 'Outside or on the terrace', 'Moving around everywhere'])
+    ]
+  },
+  publiek: {
+    titel: 'About the crowd and your friends', intro: 'Who do you go with, and who do you meet?', vragen: [
+      cbx('What plays a role for you?', ['My friends go out less or not at all anymore', 'The crowd is too young', 'The crowd is too old', 'I don\'t know anyone there', 'The atmosphere between people isn\'t great', 'Too busy and too crowded', 'Too empty']),
+      mc('How many people do you usually go out with?', ['Alone', 'With 1 person', 'With 2 to 4', 'With 5 or more']),
+      mc('Would you go alone if you knew it\'s easy to meet people there?', ['Yes', 'Maybe', 'No']),
+      mc('Which crowd feels right to you?', ['Mostly 18 to 21', 'Mostly 22 to 25', 'Mostly 26 to 30', 'Mostly 30+', 'Mixed'])
+    ]
+  },
+  veiligheid: {
+    titel: 'About safety', intro: 'Your answers are anonymous.', vragen: [
+      cbx('What sometimes makes you feel uncomfortable?', ['Unwanted behaviour or touching', 'Others abusing alcohol or drugs', 'Aggression or fights', 'Security or door policy', 'The way home', 'Fear of someone spiking my drink', 'Too crowded on the dance floor']),
+      cbx('What would give you more confidence?', ['An awareness team or a point of contact', 'Friendly and visible security', 'A clear policy against unwanted behaviour', 'Free water and drink covers', 'Safe transport home', 'A well-lit surrounding area']),
+      schaal('How safe do you usually feel at nightlife events?', 'Not safe at all', 'Very safe')
+    ]
+  },
+  tijd: {
+    titel: 'About your life right now', intro: 'Life changes. Tell us what changed for you.', vragen: [
+      cbx('What has changed for you?', ['A new or busier job', 'Kids or a growing family', 'A relationship', 'Studies', 'I moved further away', 'Other priorities (sport, health, saving money)']),
+      cbx('When would going out fit in?', ['Friday night', 'Saturday night', 'Sunday afternoon', 'A weeknight after work', 'During holidays', 'Only on special occasions']),
+      mc('How often would you realistically like to go out?', ['Less than once a month', 'Once a month', 'Twice a month', '3 times a month or more'])
+    ]
+  },
+  anders: {
+    titel: 'About other activities', intro: 'Where do your evenings go now?', vragen: [
+      cbx('What do you prefer to do in the evening?', ['Sport (padel / gym / running)', 'Cinema', 'Game or quiz night', 'Concerts', 'Dinner with friends', 'Workshops or creative activities', 'Bars with a DJ', 'Staying in with friends']),
+      cbx('Why do you choose that?', ['It\'s cheaper', 'More of an experience for my money', 'Easier to talk and connect', 'It fits my schedule better', 'I don\'t have to stay up late']),
+      mc('Would a night that combines an activity with music appeal to you? (e.g. padel + DJ, game night + party, cinema + afterparty)', ['Yes', 'Maybe', 'No']),
+      openVraag('What would a club night need to offer to compete with that?')
+    ]
+  },
+  info: {
+    titel: 'About how you discover events', intro: 'How do you find out what\'s on?', vragen: [
+      cbx('How do you discover events now?', ['Instagram', 'TikTok', 'Through friends', 'WhatsApp groups', 'Facebook', 'Ticketing platforms', 'Flyers or posters']),
+      mc('When do you decide to go?', ['Weeks in advance', 'The same week', 'The same day', 'Spontaneously while having drinks']),
+      mc('Would you like a weekly going-out agenda?', ['Yes, via Instagram', 'Yes, via WhatsApp', 'Yes, via email', 'No'])
+    ]
+  },
+  zin: {
+    titel: 'About being less in the mood', intro: 'Totally fine. We\'re curious why.', vragen: [
+      mc('What fits you best?', ['Going out interests me less than before', 'I\'ve grown out of it', 'After COVID I never really picked it up again', 'I don\'t really know']),
+      cbx('What would still get you out?', ['A unique experience or location', 'A very well-known artist', 'A party with all my friends', 'A birthday or special occasion', 'A calmer format (bar / listening session / day party)', 'Nothing, really']),
+      mc('Do you sometimes miss going out?', ['Yes', 'Sometimes', 'No'])
+    ]
+  }
+};
+
+// ========== DEEL T: TICKETS (VOOR IEDEREEN) ==========
+const TICKETS = [
+  mc('When do you usually buy your ticket for a party?', ['As soon as tickets go on sale (early bird)', 'In the weeks before', 'In the week of the party', 'On the day itself', 'At the door']),
+  cbx('Why do you often wait to buy your ticket?', ['I first want to know if my friends are going', 'I don\'t know yet if I\'ll feel like it', 'My plans can still change (work, family, weather)', 'I wait for the full line-up or timetable', 'I don\'t want to lose money if I can\'t make it', 'I know there will still be tickets', 'The presale isn\'t much cheaper anyway', 'We decide spontaneously, e.g. at the bar', 'I wait until payday', 'I don\'t wait: I usually buy early'], 3),
+  cbx('What would make you buy your ticket earlier?', ['A clearly cheaper presale price', 'A clear price timeline, so I know when prices go up', 'A refund if I can\'t make it', 'A group deal with friends', 'An extra for early buyers (drink, fast lane, merch)', 'Knowing it will sell out', 'The full line-up announced early', 'Paying later or in parts', 'Nothing: I just decide late'], 3),
+  mc('How much cheaper should a presale ticket be for you to buy it weeks in advance?', ['€2 - €3', '€4 - €5', '€6 - €10', 'More than €10', 'A discount won\'t change when I buy'])
+];
+
+// ========== DEEL D: VOOR IEDEREEN ==========
+const NA = [
+  cbx('What music do you most like to hear at a party?', ['House', 'Tech house', 'Techno', 'Hard techno / hardstyle', 'Trance / progressive', 'Melodic / deep house', 'Afro house', 'Disco / funk', 'UK garage / bass', 'Hip hop / R&B', 'Afrobeats / amapiano', 'Reggaeton / Latin', 'Drum and bass', 'Commercial / chart hits', 'Throwbacks and classics'], 3),
+  cb('Which format appeals to you most?', ['Classic club night (11 pm - 5 am)', 'Early clubbing (8 pm - 2 am)', 'Day party or afterwork', 'Open air', 'Small bar with a DJ', 'Festival', 'Theme party'], 3),
+  cbx('What decides which club or party you go to?', ['It\'s close by or easy to reach', 'The vibe and the crowd', 'The music genre', 'The line-up or a specific DJ', 'Where my friends are going', 'The price', 'The venue itself'], 3),
+  mc('Where do you prefer to go out?', ['A club', 'A bar or café with a DJ', 'Both, depends on the night']),
+  mc('What matters most to you for a good night out?', ['The music', 'The people and my friends', 'The price', 'The vibe and decoration', 'The venue and its setup']),
+  schaal('How likely are you to go to a club night in the next 3 months?', 'Very unlikely', 'Very likely'),
+  openVraag('If you could change going out, what would you do first?')
+];
+
+// ========== DEEL E: AFSLUITER ==========
+const EINDE = [
+  mc('Would you like to receive the results of this survey?', ['Yes', 'No'], '', false),
+  mailVraag('Your email address (only if you want to receive the results)',
+    'We only use your email address to send you the results. It is never shared together with your answers.')
+];
+
+// ---- instellingen ----
+// Plak hier de web-app-URL van het Apps Script (Implementeren > Web-app). Leeg = testversie, er wordt niets verstuurd.
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyKJtcNs-wW-HP7mgNZEsewTaAr39wThD-YE1ZM58i35m2uo_yS2M40R93-bggbmyoy/exec';
+const START = Date.now();
+const SESSIE = Math.random().toString(36).slice(2) + Date.now().toString(36);
+function alIngevuld() { try { return localStorage.getItem('tuatw_ingevuld') === '1' } catch (e) { return false } }
+function markeerIngevuld() { try { localStorage.setItem('tuatw_ingevuld', '1') } catch (e) {} }
+
+// ---- verloop van de enquête ----
+// Pagina's: W welkom, A over jou, B top 3, N1 nummer 1, R:<key> verdieping, X nog een topic?, T tickets, D terug op dek, E afsluiter
+const $ = id => document.getElementById(id);
+const keyOf = label => (REDENEN.find(r => r.label === label) || {}).key;
+const labelOf = key => REDENEN.find(r => r.key === key).label;
+let hist = ['W'], ans = {}, extra = [], done = false;
+
+// Top 3 en rangorde, berekend uit de antwoorden
+function topKeys() { return (ans[TITEL_DREMPELS] || []).filter(l => l !== NIETS).map(keyOf).filter(Boolean) }
+function rangorde() {
+  const t = topKeys();
+  if (!t.length) return [];
+  const r1 = t.length === 1 ? t[0] : keyOf(ans[TITEL_ZWAARST]);
+  if (!r1) return [];
+  const rest = t.filter(k => k !== r1);
+  if (rest.length < 2) return [r1].concat(rest);
+  const r2 = keyOf(ans[TITEL_NR2]);
+  return r2 ? [r1, r2, rest.find(k => k !== r2)] : [r1];
+}
+function gedaan() { return rangorde().concat(extra) }
+
+function pagina(id) {
+  if (id === 'W') return { id, titel: TITEL, intro: OMSCHRIJVING, head: true, vragen: [] };
+  if (id === 'A') return { id, titel: SECTIE_A_TITEL, intro: SECTIE_A_INTRO, vragen: ALGEMEEN };
+  if (id === 'B') return { id, titel: SECTIE_B_TITEL, intro: SECTIE_B_INTRO, vragen: [DREMPELS] };
+  if (id === 'N1') return { id, titel: SECTIE_N1_TITEL, intro: SECTIE_N1_INTRO, vragen: [
+    { type: 'mc', title: TITEL_ZWAARST, options: topKeys().map(labelOf), required: true, help: ZWAARST_HELP }] };
+  if (id === 'X') return { id, titel: SECTIE_B_TITEL, intro: '', vragen: [
+    { type: 'mc', title: TITEL_X, options: [X_NEE].concat(REDENEN.filter(r => !gedaan().includes(r.key)).map(r => r.label)), required: true, help: X_HELP }] };
+  if (id === 'T') return { id, titel: SECTIE_T_TITEL, intro: SECTIE_T_INTRO, vragen: TICKETS };
+  if (id === 'D') return { id, titel: SECTIE_D_TITEL, intro: SECTIE_D_INTRO, vragen: NA };
+  if (id === 'E') return { id, titel: SECTIE_E_TITEL, intro: '', vragen: EINDE };
+  // Verdieping van een reden
+  const key = id.slice(2), d = DIEPTE[key];
+  const t = topKeys(), r = rangorde(), k = t.indexOf(key) > -1 ? (t.length === 1 ? 0 : r.indexOf(key) > -1 ? r.indexOf(key) : 0) : -1;
+  const vragen = d.vragen.slice();
+  // Na nummer 1: kies nummer 2 uit de twee die overblijven
+  if (k === 0 && t.length === 3) {
+    const rest = t.filter(x => x !== key);
+    vragen.push({ type: 'mc', title: TITEL_NR2, options: rest.map(labelOf), required: true, help: NR2_HELP });
+  }
+  return { id, key, k, titel: k > -1 ? RONDE_TITEL(k, d.titel) : EXTRA_TITEL(d.titel), intro: d.intro, vragen };
+}
+
+function volgende(p) {
+  if (p.id === 'W') return 'A';
+  if (p.id === 'A') return 'B';
+  if (p.id === 'B') { const t = topKeys(); return !t.length ? 'T' : t.length === 1 ? 'R:' + t[0] : 'N1' }
+  if (p.id === 'N1') { const z = keyOf(ans[TITEL_ZWAARST]); return z ? 'R:' + z : null }
+  if (p.key) {
+    const r = rangorde(), t = topKeys();
+    if (p.k > -1) {
+      // Enkel nummer 1 en nummer 2 krijgen vervolgvragen; nummer 3 wordt enkel als rangorde bewaard
+      if (r.length < t.length) return null; // nummer 2 nog niet gekozen
+      if (r.indexOf(p.key) === 0 && r.length > 1) return 'R:' + r[1];
+    }
+    return 'X';
+  }
+  if (p.id === 'X') { const x = ans[TITEL_X]; return !x ? null : x === X_NEE ? 'T' : 'R:' + keyOf(x) }
+  if (p.id === 'T') return 'D';
+  if (p.id === 'D') return 'E';
+  return null;
+}
+
+function slug(s) { return 'q' + Array.from(s).reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7).toString(36) }
+
+function huidig() { return pagina(hist[hist.length - 1]) }
+
+function render() {
+  // Extra-topics bijhouden en "Nog een topic?" telkens leeg tonen
+  extra = hist.filter(h => h.startsWith('R:')).map(h => h.slice(2)).filter(k => !topKeys().includes(k));
+  const p = huidig();
+  if (p.id === 'X') delete ans[TITEL_X];
+  const pg = $('page'); pg.innerHTML = '';
+  const kop = document.createElement('div'); kop.className = 'card' + (p.head ? ' head' : '');
+  kop.innerHTML = `<${p.head ? 'h1' : 'h2'}></${p.head ? 'h1' : 'h2'}><p class="intro"></p>`;
+  kop.firstChild.textContent = p.titel; kop.lastChild.textContent = p.intro || '';
+  if (!p.intro) kop.lastChild.remove();
+  if (p.id === 'W') { kop.classList.add('welcome'); kop.lastChild.replaceWith(welkom(p.intro)) }
+  pg.appendChild(kop);
+  p.vragen.forEach(q => pg.appendChild(vraag(q)));
+  $('back').hidden = hist.length === 1;
+  $('next').textContent = p.id === 'W' ? START_KNOP : p.id === 'E' ? 'Submit' : 'Next';
+  $('next').disabled = false;
+  // Voortgang: springt vlot vooruit en gaat nooit achteruit binnen het pad
+  const ruw = id => { const v = ['W', 'A', 'B', 'N1', 'X', 'T', 'D', 'E'].indexOf(id); if (v > -1) return [0, 12, 26, 34, 70, 76, 88, 96][v];
+    const q = pagina(id); return q.k === 0 ? 48 : q.k === 1 ? 62 : 0; };
+  const pct = hist.reduce((m, id) => Math.max(m, ruw(id)), 0);
+  $('bar').style.width = pct + '%';
+  $('step').textContent = p.id === 'W' ? 'Welcome' : pct >= 85 ? 'Almost there · ' + pct + '% done' : pct + '% done';
+  window.scrollTo({ top: 0 });
+}
+
+function welkom(tekst) {
+  const box = document.createElement('div'); box.className = 'blocks';
+  tekst.split('\n\n').forEach(blok => {
+    const regels = blok.split('\n'); const deel = document.createElement('div');
+    let ul = null;
+    regels.forEach(r => {
+      if (r.startsWith('• ')) { if (!ul) { ul = document.createElement('ul'); deel.appendChild(ul) } const li = document.createElement('li'); li.textContent = r.slice(2); ul.appendChild(li) }
+      else if (/^[A-Z' ()0-9]+$/.test(r)) { const l = document.createElement('p'); l.className = 'label'; l.textContent = r; deel.appendChild(l) }
+      else { const l = document.createElement('p'); l.className = 'lead'; l.textContent = r; deel.appendChild(l) }
+    });
+    box.appendChild(deel);
+  });
+  return box;
+}
+
+function vraag(q) {
+  const id = slug(q.title);
+  const el = document.createElement('div'); el.className = 'card q'; el.dataset.title = q.title;
+  const t = document.createElement('p'); t.className = 'q-title'; t.textContent = q.title;
+  if (q.required) { const s = document.createElement('span'); s.className = 'req'; s.textContent = ' *'; t.appendChild(s) }
+  el.appendChild(t);
+  if (q.help) { const h = document.createElement('p'); h.className = 'help'; h.textContent = q.help; el.appendChild(h) }
+  const v = ans[q.title];
+  if (q.type === 'mc' || q.type === 'cb') {
+    const box = document.createElement('div'); box.className = 'opts';
+    q.options.forEach((o, i) => {
+      const l = document.createElement('label'); l.className = 'opt';
+      const inp = document.createElement('input'); inp.type = q.type === 'mc' ? 'radio' : 'checkbox';
+      inp.name = id; inp.id = id + '_' + i; inp.value = o;
+      inp.checked = q.type === 'mc' ? v === o : Array.isArray(v) && v.includes(o);
+      inp.addEventListener('change', () => opslaan(q, el));
+      const s = document.createElement('span'); s.textContent = o;
+      if (o.startsWith('➜')) l.classList.add('opt-go');
+      l.append(inp, s); box.appendChild(l);
+    });
+    if (q.other) {
+      const eigen = Array.isArray(v) ? v.find(x => !q.options.includes(x)) : '';
+      const l = document.createElement('label'); l.className = 'opt';
+      const inp = document.createElement('input'); inp.type = 'checkbox'; inp.id = id + '_other'; inp.dataset.other = '1'; inp.checked = !!eigen;
+      const s = document.createElement('span'); s.textContent = ANDER_LABEL;
+      const txt = document.createElement('input'); txt.type = 'text'; txt.id = id + '_othertxt'; txt.className = 'othertxt'; txt.placeholder = 'Type it here'; txt.value = eigen || '';
+      inp.addEventListener('change', () => opslaan(q, el));
+      txt.addEventListener('input', () => { if (!inp.disabled) inp.checked = !!txt.value.trim(); opslaan(q, el) });
+      const wrap = document.createElement('span'); wrap.className = 'otherwrap'; wrap.append(s, txt);
+      l.append(inp, wrap); box.appendChild(l);
+    }
+    el.appendChild(box);
+    if (q.type === 'cb' && q.max) { const tel = document.createElement('p'); tel.className = 'teller'; el.appendChild(tel); }
+  } else if (q.type === 'scale') {
+    const box = document.createElement('div'); box.className = 'scale';
+    for (let n = 1; n <= 5; n++) {
+      const l = document.createElement('label');
+      l.innerHTML = `<span>${n}</span><input type="radio" name="${id}" id="${id}_${n}" value="${n}">`;
+      const inp = l.querySelector('input'); inp.checked = v === String(n);
+      inp.addEventListener('change', () => opslaan(q, el)); box.appendChild(l);
+    }
+    const ends = document.createElement('div'); ends.className = 'ends';
+    ends.innerHTML = '<span></span><span></span>'; ends.children[0].textContent = q.laag; ends.children[1].textContent = q.hoog;
+    el.append(box, ends);
+  } else {
+    const inp = document.createElement(q.type === 'para' ? 'textarea' : 'input');
+    if (q.type === 'email') { inp.type = 'email'; inp.placeholder = 'name@example.com' } else inp.placeholder = 'Your answer';
+    inp.id = id; inp.value = v || '';
+    inp.addEventListener('input', () => opslaan(q, el)); el.appendChild(inp);
+  }
+  const e = document.createElement('div'); e.className = 'err'; e.hidden = true; el.appendChild(e);
+  if (q.type === 'cb' && q.max) limiet(q, el);
+  return el;
+}
+
+// Maximum bereikt: de andere vakjes zijn niet meer aan te klikken tot er één wordt uitgevinkt
+function limiet(q, el) {
+  const boxes = Array.from(el.querySelectorAll('input[type=checkbox]'));
+  const n = boxes.filter(b => b.checked).length, vol = n >= q.max;
+  boxes.forEach(b => {
+    b.disabled = vol && !b.checked;
+    b.closest('.opt').classList.toggle('disabled', b.disabled);
+    if (b.dataset.other) { const t = el.querySelector('.othertxt'); if (t) t.disabled = b.disabled; }
+  });
+  const tel = el.querySelector('.teller');
+  if (tel) { tel.classList.toggle('vol', vol); tel.textContent = vol ? 'Maximum reached: untick one to choose another.' : n + ' of ' + q.max + ' chosen'; }
+}
+
+function opslaan(q, el) {
+  const ins = el.querySelectorAll('input, textarea');
+  if (q.type === 'cb') {
+    const lijst = Array.from(ins).filter(i => i.type === 'checkbox' && i.checked && !i.dataset.other).map(i => i.value);
+    const ow = el.querySelector('[data-other]'), txt = el.querySelector('.othertxt');
+    if (ow && ow.checked && txt.value.trim()) lijst.push(txt.value.trim());
+    ans[q.title] = lijst;
+    if (q.max) limiet(q, el);
+  }
+  else if (q.type === 'mc' || q.type === 'scale') { const c = Array.from(ins).find(i => i.checked); ans[q.title] = c ? c.value : '' }
+  else ans[q.title] = ins[0].value.trim();
+  fout(el, '');
+}
+
+function fout(el, msg) { const e = el.querySelector('.err'); e.textContent = msg; e.hidden = !msg; el.classList.toggle('bad', !!msg) }
+
+function controleer(p) {
+  let ok = true, eerste = null;
+  p.vragen.forEach(q => {
+    const el = Array.from(document.querySelectorAll('.q')).find(x => x.dataset.title === q.title);
+    const v = ans[q.title]; let msg = '';
+    const leeg = v == null || v === '' || (Array.isArray(v) && !v.length);
+    if (q.required && leeg) msg = 'This is a required question.';
+    else if (q.type === 'cb' && q.max && Array.isArray(v) && v.length > q.max) msg = MAX_HELP(q.max);
+    else if (q.title === TITEL_DREMPELS && v.includes(NIETS) && v.length > 1) msg = NIETS_FOUT;
+    else if (q.type === 'email' && v && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) msg = EMAIL_FOUT;
+    fout(el, msg);
+    if (msg) { ok = false; eerste = eerste || el }
+  });
+  if (eerste) eerste.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  return ok;
+}
+
+// ---- versturen ----
+// Alle antwoorden van de pagina's die de deelnemer echt zag, plus de berekende rangorde
+function verzamel() {
+  const uit = {};
+  hist.map(pagina).forEach(p => p.vragen.forEach(q => {
+    if (q.title === TITEL_X || q.title === TITEL_NR2 || q.title === TITEL_ZWAARST) return;
+    const v = ans[q.title];
+    if (v == null || v === '' || (Array.isArray(v) && !v.length)) return;
+    uit[q.title] = v;
+  }));
+  const r = rangorde().map(labelOf);
+  if (r[0]) uit[TITEL_ZWAARST] = r[0];
+  if (r[1]) uit[TITEL_NR2] = r[1];
+  if (r[2]) uit[TITEL_NR3] = r[2];
+  if (extra.length) uit[TITEL_EXTRA] = extra.map(labelOf);
+  // Controlegegevens tegen nep- en spamantwoorden (geen persoonsgegevens)
+  uit._duur = Math.round((Date.now() - START) / 1000);
+  uit._id = SESSIE;
+  uit._val = ($('hp') || {}).value || '';
+  uit._herhaald = alIngevuld() ? 'ja' : 'nee';
+  return uit;
+}
+
+async function verstuur() {
+  const data = verzamel();
+  if (!SCRIPT_URL) return eind(data, true);
+  $('next').disabled = true; $('next').textContent = 'Sending…';
+  try {
+    await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(data) });
+    markeerIngevuld();
+    eind(data, false);
+  } catch (e) {
+    $('next').disabled = false; $('next').textContent = 'Try again';
+    const el = document.querySelector('.q:last-of-type');
+    if (el) fout(el, 'Sending failed. Check your connection and press "Try again".');
+  }
+}
+
+function eind(data, test) {
+  done = true;
+  $('nav').hidden = true; $('bar').style.width = '100%'; $('step').textContent = 'Done';
+  const pg = $('page'); pg.innerHTML = '';
+  const c = document.createElement('div'); c.className = 'card head';
+  c.innerHTML = '<h2>Thank you</h2><p class="intro"></p>';
+  c.querySelector('.intro').textContent = BEDANKT;
+  if (test) {
+    const box = document.createElement('div');
+    box.innerHTML = '<p class="help" style="margin-top:16px">Test version: this is what would land in the results sheet.</p><div class="sum"></div><div class="nav" style="margin-top:16px"><button class="primary" id="opnieuw" type="button">Test again</button></div>';
+    const sum = box.querySelector('.sum');
+    Object.keys(data).filter(k => k[0] !== '_').forEach(k => {
+      const d = document.createElement('div'); d.innerHTML = '<span></span>';
+      d.firstChild.textContent = k; d.append(Array.isArray(data[k]) ? data[k].join(' · ') : data[k]); sum.appendChild(d);
+    });
+    c.appendChild(box);
+  }
+  const em = data[EINDE[1].title];
+  if (!test && em) {
+    const m = document.createElement('p'); m.className = 'help'; m.style.marginTop = '16px';
+    m.textContent = 'We sent a confirmation email to ' + em + '. Click the link in it to confirm your address, so we can send you the results.';
+    c.appendChild(m);
+  }
+  pg.appendChild(c);
+  const o = $('opnieuw');
+  if (o) o.addEventListener('click', () => { hist = ['W']; ans = {}; extra = []; done = false; $('nav').hidden = false; render() });
+  window.scrollTo({ top: 0 });
+}
+
+$('next').addEventListener('click', () => {
+  const p = huidig();
+  if (!controleer(p)) return;
+  if (p.id === 'E') return verstuur();
+  const n = volgende(p);
+  if (!n) return;
+  if (hist.includes(n) && n !== 'X') { hist = hist.slice(0, hist.indexOf(n) + 1) } else hist.push(n);
+  render();
+});
+$('back').addEventListener('click', () => { if (hist.length > 1) { hist.pop(); render() } });
+render();
+</script>
