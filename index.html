@@ -200,6 +200,8 @@ const ALGEMEEN = [
 const DREMPELS = cb(TITEL_DREMPELS, REDENEN.map(r => r.label).concat([NIETS]), 3, 'Tick up to 3 reasons.');
 
 // ========== DEEL C: VERDIEPING PER REDEN ==========
+const TITEL_VRIENDEN = 'Your friends don\'t go out anymore, but you\'d still like to. What could a party do to make you go anyway?';
+const TITEL_LEVEN = 'What would concretely help you to go out again?';
 const DIEPTE = {
   prijs: {
     titel: 'About the price', intro: 'A closer look at what going out costs.', vragen: [
@@ -264,7 +266,8 @@ const DIEPTE = {
       cbx('What plays a role for you?', ['My friends go out less or not at all anymore', 'The crowd is too young', 'The crowd is too old', 'I don\'t know anyone there', 'The atmosphere between people isn\'t great', 'Too busy and too crowded', 'Too empty']),
       mc('How many people do you usually go out with?', ['Alone', 'With 1 person', 'With 2 to 4', 'With 5 or more']),
       mc('Would you go alone if you knew it\'s easy to meet people there?', ['Yes', 'Maybe', 'No']),
-      mc('Which crowd feels right to you?', ['Mostly 18 to 21', 'Mostly 22 to 25', 'Mostly 26 to 30', 'Mostly 30+', 'Mixed'])
+      mc('Which crowd feels right to you?', ['Mostly 18 to 21', 'Mostly 22 to 25', 'Mostly 26 to 30', 'Mostly 30+', 'Mixed']),
+      cbx(TITEL_VRIENDEN, ['Clearly letting people know you\'re welcome on your own', 'Help me find others who are going alone (e.g. a group chat before the party)', 'A host or welcome moment that brings people together', 'Activities that make it easy to start a conversation', 'A smaller party where you quickly feel at home', 'Knowing the crowd is people like me', 'Nothing: without my friends, I don\'t go'], 2)
     ]
   },
   veiligheid: {
@@ -278,7 +281,8 @@ const DIEPTE = {
     titel: 'About your life right now', intro: 'Life changes. Tell us what changed for you.', vragen: [
       cbx('What has changed for you?', ['A new or busier job', 'Kids or a growing family', 'A relationship', 'Studies', 'I moved further away', 'Other priorities (sport, health, saving money)']),
       cbx('When would going out fit in?', ['Friday night', 'Saturday night', 'Sunday afternoon', 'A weeknight after work', 'During holidays', 'Only on special occasions']),
-      mc('How often would you realistically like to go out?', ['Less than once a month', 'Once a month', 'Twice a month', '3 times a month or more'])
+      mc('How often would you realistically like to go out?', ['Less than once a month', 'Once a month', 'Twice a month', '3 times a month or more']),
+      cbx(TITEL_LEVEN, ['A night that ends early, so I\'m fit the next day', 'An afterwork party, straight from my job', 'A day party in the afternoon', 'Knowing the date well in advance, so I can plan it', 'Short and intense: a few hours, but really good', 'A crowd in the same stage of life as me'], 2)
     ]
   },
   anders: {
@@ -313,9 +317,18 @@ const TICKETS = [
   mc('How much cheaper should a presale ticket be for you to buy it weeks in advance?', ['€2 - €3', '€4 - €5', '€6 - €10', 'More than €10', 'A discount won\'t change when I buy'])
 ];
 
+// ========== NAAM OF IETS ANDERS (toegevoegd 14/11/2026) ==========
+const TITEL_KEUZE = 'Two nights, same ticket price. Which one would you choose?';
+const KEUZE_NAAM = 'A night with a well-known DJ as headliner';
+const KEUZE_ANDERS = 'A night without well-known names, but with something else that stands out (e.g. a unique location, setup or theme)';
+const STANDOUT = [
+  cbx('You chose something that stands out over a well-known DJ name. What could that be, so you\'d buy your ticket?', ['An unusual location where you\'d never expect a party', 'A secret location, revealed shortly before', 'A venue I know, completely transformed into something I\'ve never seen', 'A theme night with its own atmosphere', 'A party where everyone dresses up for the theme', 'Lots of activities besides dancing', 'A live act or performance next to the DJs', 'A niche sound you can\'t find anywhere else', 'A secret line-up', 'An exclusive party you can only get into through a group, list or invite', 'It only happens a few times a year, so I don\'t want to miss it'], 2)
+];
+
 // ========== DEEL D: VOOR IEDEREEN ==========
 const NA = [
   cbx('What music do you most like to hear at a party?', ['House', 'Tech house', 'Techno', 'Hard techno / hardstyle', 'Trance / progressive', 'Melodic / deep house', 'Afro house', 'Disco / funk', 'UK garage / bass', 'Hip hop / R&B', 'Afrobeats / amapiano', 'Reggaeton / Latin', 'Drum and bass', 'Commercial / chart hits', 'Throwbacks and classics'], 3),
+  mc(TITEL_KEUZE, [KEUZE_NAAM, KEUZE_ANDERS]),
   cb('Which format appeals to you most?', ['Classic club night (11 pm - 5 am)', 'Early clubbing (8 pm - 2 am)', 'Day party or afterwork', 'Open air', 'Small bar with a DJ', 'Festival', 'Theme party'], 3),
   cbx('What decides which club or party you go to?', ['It\'s close by or easy to reach', 'The vibe and the crowd', 'The music genre', 'The line-up or a specific DJ', 'Where my friends are going', 'The price', 'The venue itself'], 3),
   mc('Where do you prefer to go out?', ['A club', 'A bar or café with a DJ', 'Both, depends on the night']),
@@ -370,6 +383,7 @@ function pagina(id) {
     { type: 'mc', title: TITEL_X, options: [X_NEE].concat(REDENEN.filter(r => !gedaan().includes(r.key)).map(r => r.label)), required: true, help: X_HELP }] };
   if (id === 'T') return { id, titel: SECTIE_T_TITEL, intro: SECTIE_T_INTRO, vragen: TICKETS };
   if (id === 'D') return { id, titel: SECTIE_D_TITEL, intro: SECTIE_D_INTRO, vragen: NA };
+  if (id === 'S') return { id, titel: SECTIE_D_TITEL, intro: '', vragen: STANDOUT };
   if (id === 'E') return { id, titel: SECTIE_E_TITEL, intro: '', vragen: EINDE };
   // Verdieping van een reden
   const key = id.slice(2), d = DIEPTE[key];
@@ -399,7 +413,8 @@ function volgende(p) {
   }
   if (p.id === 'X') { const x = ans[TITEL_X]; return !x ? null : x === X_NEE ? 'T' : 'R:' + keyOf(x) }
   if (p.id === 'T') return 'D';
-  if (p.id === 'D') return 'E';
+  if (p.id === 'D') return ans[TITEL_KEUZE] === KEUZE_ANDERS ? 'S' : 'E';
+  if (p.id === 'S') return 'E';
   return null;
 }
 
@@ -424,7 +439,7 @@ function render() {
   $('next').textContent = p.id === 'W' ? START_KNOP : p.id === 'E' ? 'Submit' : 'Next';
   $('next').disabled = false;
   // Voortgang: springt vlot vooruit en gaat nooit achteruit binnen het pad
-  const ruw = id => { const v = ['W', 'A', 'B', 'N1', 'X', 'T', 'D', 'E'].indexOf(id); if (v > -1) return [0, 12, 26, 34, 70, 76, 88, 96][v];
+  const ruw = id => { const v = ['W', 'A', 'B', 'N1', 'X', 'T', 'D', 'S', 'E'].indexOf(id); if (v > -1) return [0, 12, 26, 34, 70, 76, 86, 92, 96][v];
     const q = pagina(id); return q.k === 0 ? 48 : q.k === 1 ? 62 : 0; };
   const pct = hist.reduce((m, id) => Math.max(m, ruw(id)), 0);
   $('bar').style.width = pct + '%';
