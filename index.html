@@ -40,6 +40,8 @@ h1 { font-size: clamp(34px, 8vw, 52px) } h2 { font-size: clamp(26px, 6vw, 36px) 
 .intro { color: var(--white); white-space: pre-line; margin: 0; max-width: 60ch }
 .q-title { font-weight: 700; font-stretch: 112%; font-size: 17px; margin: 0 0 4px }
 .req { color: var(--red) }
+.scen { border-left: 3px solid var(--red); padding: 2px 0 2px 14px; margin: 0 0 14px; font-size: 15px; line-height: 1.5 }
+.scen p { margin: 0 0 8px } .scen ul { margin: 0 0 8px; padding-left: 18px } .scen .pct { background: var(--red); color: #fff; font-weight: 700; font-size: 13px; padding: 1px 7px; border-radius: 99px; white-space: nowrap }
 .help { font-size: 15px; color: var(--soft); font-style: italic; margin: 0 0 12px }
 .opts { display: flex; flex-direction: column; gap: 4px }
 .opt { display: flex; gap: 12px; align-items: flex-start; padding: 8px 10px; border-radius: 3px; cursor: pointer }
@@ -310,6 +312,45 @@ const DIEPTE = {
 };
 
 // ========== DEEL T: TICKETS (VOOR IEDEREEN) ==========
+// ========== TICKETSYSTEEM EN PAKKETTEN (toegevoegd 14/11/2026) ==========
+const TITEL_PAKKET = 'Which ticket would you rather buy?';
+const PAKKET_15 = '€15: entry only, you pay for everything else at the party';
+const PAKKET_25 = '€25: entry, cloakroom, toilets and 2 drinks included, cheaper than buying it all separately';
+const PAKKET_40 = '€40: all-in, with unlimited basic drinks (beer, wine, cava, soft drinks), cloakroom and toilets included';
+const TITEL_KRIMP = 'Imagine a package where the earlier you buy, the more is included (e.g. 3 drinks and a gadget in the first week, fewer extras closer to the party). Would that make you buy earlier?';
+const TITEL_DATUM = 'Would this system make you buy your ticket earlier?';
+const DATUM_NEE = 'No, I\'d still decide late';
+const TITEL_WEEK = 'In which week would you most likely buy your ticket?';
+const TITEL_DEADLINE = 'Would the deadline make you ask your friends to buy before the price goes up?';
+const KOL_VERSIE = 'Scenario version (prices shown with or without %)';
+// Willekeurig de helft ziet de prijzen met kortingspercentage, zo meten we of % een verschil maakt
+let SCEN_PCT = Math.random() < 0.5;
+try { const v = localStorage.getItem('tuatw_scen'); if (v === 'pct' || v === 'plain') SCEN_PCT = v === 'pct'; else localStorage.setItem('tuatw_scen', SCEN_PCT ? 'pct' : 'plain'); } catch (e) {}
+function scenarioHtml() {
+  const p = (prijs, pct) => SCEN_PCT && pct ? prijs + ' <span class="pct">(' + pct + ' off)</span>' : prijs;
+  return '<p><b>Imagine a party that sells tickets by date, instead of by a number of tickets.</b></p>' +
+    '<p><b>No limits:</b> everyone can buy at that week\'s price. If it sells out in the first week, it sells out.</p>' +
+    '<p>For example, tickets go online 4 weeks before the party:</p>' +
+    '<ul><li><b>4 weeks before:</b> ' + p('€5', '67%') + '</li><li><b>3 weeks before:</b> ' + p('€10', '33%') + '</li><li><b>Last 2 weeks:</b> €15</li><li><b>At the door:</b> €20</li></ul>' +
+    '<p><b>Reminder:</b> you get a message before each price goes up.</p>';
+}
+const TICKETS_EXTRA = [
+  cb(TITEL_PAKKET, [PAKKET_15, PAKKET_25, PAKKET_40, 'Depends on what\'s included']),
+  mc(TITEL_KRIMP, ['Yes', 'Maybe', 'No', 'I\'m not interested in packages']),
+  Object.assign(mc(TITEL_DATUM, ['Yes', 'Maybe', DATUM_NEE]), { scenario: true })
+];
+function pakketVervolg() {
+  return (ans[TITEL_PAKKET] === PAKKET_25 || ans[TITEL_PAKKET] === PAKKET_40) ? [mc(TITEL_KRIMP, ['Yes', 'Maybe', 'No'])] : [];
+}
+function datumVervolg() {
+  const v = [];
+  if (ans[TITEL_DATUM] && ans[TITEL_DATUM] !== DATUM_NEE) {
+    v.push(mc(TITEL_WEEK, ['4 weeks before (€5)', '3 weeks before (€10)', 'In the last 2 weeks (€15)', 'At the door (€20)']));
+    v.push(mc(TITEL_DEADLINE, ['Yes, I\'d get my friends to buy together before the deadline', 'Maybe', 'No, I\'d just buy my own ticket', 'No, I\'d still wait until my friends decide']));
+  }
+  return v;
+}
+
 const TICKETS = [
   mc('When do you usually buy your ticket for a party?', ['As soon as tickets go on sale (early bird)', 'In the weeks before', 'In the week of the party', 'On the day itself', 'At the door']),
   cbx('Why do you often wait to buy your ticket?', ['I first want to know if my friends are going', 'I don\'t know yet if I\'ll feel like it', 'My plans can still change (work, family, weather)', 'I wait for the full line-up or timetable', 'I don\'t want to lose money if I can\'t make it', 'I know there will still be tickets', 'The presale isn\'t much cheaper anyway', 'We decide spontaneously, e.g. at the bar', 'I wait until payday', 'I don\'t wait: I usually buy early'], 3),
@@ -325,10 +366,12 @@ const STANDOUT = [
   cbx('You chose something that stands out over a well-known DJ name. What could that be, so you\'d buy your ticket?', ['An unusual location where you\'d never expect a party', 'A secret location, revealed shortly before', 'A venue I know, completely transformed into something I\'ve never seen', 'A theme night with its own atmosphere', 'A party where everyone dresses up for the theme', 'Lots of activities besides dancing', 'A live act or performance next to the DJs', 'A niche sound you can\'t find anywhere else', 'A secret line-up', 'An exclusive party you can only get into through a group, list or invite', 'It only happens a few times a year, so I don\'t want to miss it'], 2)
 ];
 
+// Nieuwe vragen horen bij het pad van hun topic (14/11/2026)
+DIEPTE.prijs.vragen.push(TICKETS_EXTRA[0], TICKETS_EXTRA[1]);   // pakketvragen enkel in het prijspad
+
 // ========== DEEL D: VOOR IEDEREEN ==========
 const NA = [
   cbx('What music do you most like to hear at a party?', ['House', 'Tech house', 'Techno', 'Hard techno / hardstyle', 'Trance / progressive', 'Melodic / deep house', 'Afro house', 'Disco / funk', 'UK garage / bass', 'Hip hop / R&B', 'Afrobeats / amapiano', 'Reggaeton / Latin', 'Drum and bass', 'Commercial / chart hits', 'Throwbacks and classics'], 3),
-  mc(TITEL_KEUZE, [KEUZE_NAAM, KEUZE_ANDERS]),
   cb('Which format appeals to you most?', ['Classic club night (11 pm - 5 am)', 'Early clubbing (8 pm - 2 am)', 'Day party or afterwork', 'Open air', 'Small bar with a DJ', 'Festival', 'Theme party'], 3),
   cbx('What decides which club or party you go to?', ['It\'s close by or easy to reach', 'The vibe and the crowd', 'The music genre', 'The line-up or a specific DJ', 'Where my friends are going', 'The price', 'The venue itself'], 3),
   mc('Where do you prefer to go out?', ['A club', 'A bar or café with a DJ', 'Both, depends on the night']),
@@ -381,9 +424,14 @@ function pagina(id) {
     { type: 'mc', title: TITEL_ZWAARST, options: topKeys().map(labelOf), required: true, help: ZWAARST_HELP }] };
   if (id === 'X') return { id, titel: SECTIE_B_TITEL, intro: '', vragen: [
     { type: 'mc', title: TITEL_X, options: [X_NEE].concat(REDENEN.filter(r => !gedaan().includes(r.key)).map(r => r.label)), required: true, help: X_HELP }] };
-  if (id === 'T') return { id, titel: SECTIE_T_TITEL, intro: SECTIE_T_INTRO, vragen: TICKETS };
-  if (id === 'D') return { id, titel: SECTIE_D_TITEL, intro: SECTIE_D_INTRO, vragen: NA };
+  if (id === 'T') return { id, titel: SECTIE_T_TITEL, intro: SECTIE_T_INTRO, vragen: TICKETS.concat([TICKETS_EXTRA[2]]) };
+  if (id === 'T2') return { id, titel: SECTIE_T_TITEL, intro: '', vragen: datumVervolg() };
+  if (id === 'K') return { id, titel: SECTIE_D_TITEL, intro: SECTIE_D_INTRO, vragen: [mc(TITEL_KEUZE, [KEUZE_NAAM, KEUZE_ANDERS])] };
   if (id === 'S') return { id, titel: SECTIE_D_TITEL, intro: '', vragen: STANDOUT };
+  if (id === 'D') return { id, titel: SECTIE_D_TITEL, intro: '', vragen: NA };
+  // Extra vervolgpagina binnen een topic (id = Z|soort|volgende pagina)
+  if (id.startsWith('Z|')) { const soort = id.split('|')[1];
+    return { id, titel: DIEPTE.prijs.titel, intro: '', vragen: pakketVervolg() }; }
   if (id === 'E') return { id, titel: SECTIE_E_TITEL, intro: '', vragen: EINDE };
   // Verdieping van een reden
   const key = id.slice(2), d = DIEPTE[key];
@@ -397,24 +445,33 @@ function pagina(id) {
   return { id, key, k, titel: k > -1 ? RONDE_TITEL(k, d.titel) : EXTRA_TITEL(d.titel), intro: d.intro, vragen };
 }
 
+function volgendeNaTopic(p) {
+  const r = rangorde(), t = topKeys();
+  if (p.k > -1) {
+    // Enkel nummer 1 en nummer 2 krijgen vervolgvragen; nummer 3 wordt enkel als rangorde bewaard
+    if (r.length < t.length) return null; // nummer 2 nog niet gekozen
+    if (r.indexOf(p.key) === 0 && r.length > 1) return 'R:' + r[1];
+  }
+  return 'X';
+}
+
 function volgende(p) {
   if (p.id === 'W') return 'A';
   if (p.id === 'A') return 'B';
   if (p.id === 'B') { const t = topKeys(); return !t.length ? 'T' : t.length === 1 ? 'R:' + t[0] : 'N1' }
   if (p.id === 'N1') { const z = keyOf(ans[TITEL_ZWAARST]); return z ? 'R:' + z : null }
   if (p.key) {
-    const r = rangorde(), t = topKeys();
-    if (p.k > -1) {
-      // Enkel nummer 1 en nummer 2 krijgen vervolgvragen; nummer 3 wordt enkel als rangorde bewaard
-      if (r.length < t.length) return null; // nummer 2 nog niet gekozen
-      if (r.indexOf(p.key) === 0 && r.length > 1) return 'R:' + r[1];
-    }
-    return 'X';
+    const n = volgendeNaTopic(p);
+    if (!n) return n;
+    return n;
   }
   if (p.id === 'X') { const x = ans[TITEL_X]; return !x ? null : x === X_NEE ? 'T' : 'R:' + keyOf(x) }
-  if (p.id === 'T') return 'D';
-  if (p.id === 'D') return ans[TITEL_KEUZE] === KEUZE_ANDERS ? 'S' : 'E';
-  if (p.id === 'S') return 'E';
+  if (p.id === 'T') return datumVervolg().length ? 'T2' : 'K';
+  if (p.id === 'T2') return 'K';
+  if (p.id === 'K') return !ans[TITEL_KEUZE] ? null : ans[TITEL_KEUZE] === KEUZE_ANDERS ? 'S' : 'D';
+  if (p.id === 'S') return 'D';
+  if (p.id === 'D') return 'E';
+  if (p.id.startsWith('Z|')) return p.id.split('|').slice(2).join('|');
   return null;
 }
 
@@ -439,7 +496,8 @@ function render() {
   $('next').textContent = p.id === 'W' ? START_KNOP : p.id === 'E' ? 'Submit' : 'Next';
   $('next').disabled = false;
   // Voortgang: springt vlot vooruit en gaat nooit achteruit binnen het pad
-  const ruw = id => { const v = ['W', 'A', 'B', 'N1', 'X', 'T', 'D', 'S', 'E'].indexOf(id); if (v > -1) return [0, 12, 26, 34, 70, 76, 86, 92, 96][v];
+  const ruw = id => { const v = ['W', 'A', 'B', 'N1', 'X', 'T', 'T2', 'K', 'S', 'D', 'E'].indexOf(id); if (v > -1) return [0, 12, 26, 34, 70, 74, 77, 80, 83, 88, 96][v];
+    if (id.startsWith('Z|')) return 0;
     const q = pagina(id); return q.k === 0 ? 48 : q.k === 1 ? 62 : 0; };
   const pct = hist.reduce((m, id) => Math.max(m, ruw(id)), 0);
   $('bar').style.width = pct + '%';
@@ -465,6 +523,7 @@ function welkom(tekst) {
 function vraag(q) {
   const id = slug(q.title);
   const el = document.createElement('div'); el.className = 'card q'; el.dataset.title = q.title;
+  if (q.scenario) { const sc = document.createElement('div'); sc.className = 'scen'; sc.innerHTML = scenarioHtml(); el.appendChild(sc) }
   const t = document.createElement('p'); t.className = 'q-title'; t.textContent = q.title;
   if (q.required) { const s = document.createElement('span'); s.className = 'req'; s.textContent = ' *'; t.appendChild(s) }
   el.appendChild(t);
@@ -579,6 +638,7 @@ function verzamel() {
   if (r[2]) uit[TITEL_NR3] = r[2];
   if (extra.length) uit[TITEL_EXTRA] = extra.map(labelOf);
   // Controlegegevens tegen nep- en spamantwoorden (geen persoonsgegevens)
+  if (uit[TITEL_DATUM]) uit[KOL_VERSIE] = SCEN_PCT ? 'with %' : 'without %';
   uit._duur = Math.round((Date.now() - START) / 1000);
   uit._id = SESSIE;
   uit._val = ($('hp') || {}).value || '';
